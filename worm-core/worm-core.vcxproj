@@ -153,6 +153,10 @@
   <ItemGroup>
     <ClCompile Include="worm-core.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Users\Matthew\Pictures\mexico.JPG" />
+    <Image Include="..\..\..\..\Users\Matthew\Pictures\Prom\prom.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -19,4 +19,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Users\Matthew\Pictures\mexico.JPG">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Users\Matthew\Pictures\Prom\prom.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
