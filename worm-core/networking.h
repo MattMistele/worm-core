@@ -1,4 +1,5 @@
-#include "networking.h"
+
+#include <WinSock2.h>
 
 /* Function to initialize sockets and connect C2 server */
 SOCKET connect_to_c2(char *,  char *);
