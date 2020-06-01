@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "networking.h"
+#include <iostream>
 
 #define DEFAULT_BUFLEN 512
 
@@ -166,16 +167,17 @@ char *decryption(char *encrypted_data){
 *  Output: A single combined packet in the correct format
 */
 
-char *structure_init_message(char XOR_key, char *virus_id, char *hostname, char *ip, char *country){
-	char buffer[32];
+char *structure_init_message(char XOR_key, const char *virus_id, const char *hostname, const char *ip, const char *country){
 
 	/* Allocate buffers */
+	char *buffer = (char*)malloc(sizeof(CHAR) * 32); 
 	char *virus_id_10 = (char *)malloc(sizeof(CHAR)*10);
 	char *hostname_10 = (char *)malloc(sizeof(CHAR)*10);
 	char *ip_10 = (char *)malloc(sizeof(CHAR)*10);
 	char *country_2 = (char *)malloc(sizeof(CHAR)*2);
 
 	/* Set buffer to Nulls */
+	memset(buffer, '\0', sizeof(buffer));
 	memset(virus_id_10, '\0', sizeof(virus_id_10));
 	memset(hostname_10, '\0', sizeof(hostname_10));
 	memset(ip_10, '\0', sizeof(ip_10));
@@ -189,10 +191,11 @@ char *structure_init_message(char XOR_key, char *virus_id, char *hostname, char 
 
 	/* Create Message Buffer */
 	buffer[0] = XOR_key;
-	strcat(buffer, virus_id);
-	strcat(buffer, hostname);
-	strcat(buffer, ip);
-	strcat(buffer, country);
+	strncat(buffer, virus_id, 10);
+	strncat(buffer, hostname, 10);
+	strncat(buffer, ip, 10);
+	strncat(buffer, country, 2);	
+	
 
 	return buffer;
 }
