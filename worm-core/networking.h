@@ -1,3 +1,10 @@
+#pragma once
+
+#ifdef NETWORKING_EXPORTS
+#define NETWORKING_API __declspec(dllexport)
+#else
+#define NETWORKING_API __declspec(dllimport)
+#endif
 
 #include <WinSock2.h>
 

