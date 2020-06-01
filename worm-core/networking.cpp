@@ -8,7 +8,7 @@
 #include <iphlpapi.h>
 #include <stdio.h>
 #include <cstring>
-#inculde <string.h>
+#include <string.h>
 #include "networking.h"
 
 #define DEFAULT_BUFLEN 512
