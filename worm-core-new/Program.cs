@@ -10,7 +10,6 @@ using System.Net;
 using Newtonsoft.Json.Linq;
 using System.DirectoryServices;
 using System.Net.Sockets;
-using System.Drawing;
 
 namespace worm_core_new
 {
