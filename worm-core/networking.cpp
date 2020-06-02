@@ -13,7 +13,9 @@
 #include "networking.h"
 #include <iostream>
 
-#define DEFAULT_BUFLEN 512
+
+
+#define DEFAULT_BUFLEN 32
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -129,17 +131,22 @@ int send_to_c2(char *encrypted_data, SOCKET ConnectSocket){
 
 char *encryption(char *decrypted_data){
 	int i;
-	char encrypted_data[DEFAULT_BUFLEN];
+	//char* encrypted_data = (char*)malloc(32);
 
 	/* Extract XOR key */
 	char XOR_key = decrypted_data[0];
 	
 	/* Apply XOR key to rest of the buffer */
 	for(i=1; i < strlen(decrypted_data); ++i){
-		encrypted_data[i] = decrypted_data[i] ^ XOR_key;
+		//encrypted_data += 1;
+		//std::cout << int(decrypted_data[i]) << " - ";
+		decrypted_data[i] = decrypted_data[i] ^ XOR_key;
+		//std::cout << int(decrypted_data[i]) << std::endl; 
 	}
 
-	return encrypted_data;
+	std::cout << std::endl;
+	
+	return decrypted_data;
 }
 
 /* Function: Decrypts a Data packet 
@@ -149,17 +156,21 @@ char *encryption(char *decrypted_data){
 		       
 char *decryption(char *encrypted_data){
 	int i;
-	char decrypted_data[DEFAULT_BUFLEN];
+	//char* decrypted_data = (char*) malloc(32);
 
 	/* Extract XOR key */
 	char XOR_key = encrypted_data[0];
 
 	/* Apply XOR key to rest of the buffer */
 	for(i=1; i < strlen(encrypted_data); ++i){
-		decrypted_data[i] = encrypted_data[i] ^ XOR_key;
+		//std::cout << int(encrypted_data[i]) << " - ";
+		encrypted_data[i] = encrypted_data[i] ^ XOR_key;
+		//std::cout << int(encrypted_data[i]) << std::endl;
 	}
+	//decrypted_data[31] = '\0';
 
-	return decrypted_data;
+	//std::cout << std::endl;
+	return encrypted_data;
 }
 
 /* Function: Takes variable length inputs and ensures that the init packet is the correct format (See Google Drive for specific details) 
