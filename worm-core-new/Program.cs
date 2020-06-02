@@ -79,7 +79,7 @@ namespace worm_core_new
             // List all computers on local network
             DirectoryEntry root = new DirectoryEntry("WinNT:");
             List<KeyValuePair<string, IPAddress>> toScan = new List<KeyValuePair<string, IPAddress>>();
-            Console.WriteLine("SCANNING Local Area Network");
+            Console.WriteLine("\nSCANNING Local Area Network");
             foreach (DirectoryEntry computers in root.Children)
             {
                 foreach (DirectoryEntry computer in computers.Children)
